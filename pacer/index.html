@@ -424,13 +424,13 @@
 
     <!-- Control 1 & 2: Target Time Text & Slider -->
     <div class="form-group">
-      <label for="target-time-text">Target Time <span class="hint">(hh:mm:ss or mm:ss)</span></label>
+      <label for="target-time-text">Target Time <span class="hint">(h:mm:ss or m:ss)</span></label>
       <div class="control-row">
         <div class="input-with-badge">
-          <input type="text" id="target-time-text" value="00:50:00" placeholder="00:50:00" />
+          <input type="text" id="target-time-text" value="3:30:00" placeholder="3:30:00" />
           <span class="input-badge">time</span>
         </div>
-        <div class="error-msg" id="target-time-error">Please enter a valid time (e.g. 00:50:00)</div>
+        <div class="error-msg" id="target-time-error">Please enter a valid time (e.g. 3:30:00 or 50:00)</div>
         <div>
           <input type="range" id="target-time-slider" min="600" max="7200" step="1" value="3000">
           <div class="slider-limits">
@@ -444,7 +444,7 @@
     <!-- Control 3 & 4: Pace Text & Slider -->
     <div class="form-group">
       <div class="label-row">
-        <label for="pace-text" id="pace-label">Pace (Minute Miles) <span class="hint" id="pace-hint">(mm:ss /mi)</span></label>
+        <label for="pace-text" id="pace-label">Pace (Minute Miles) <span class="hint" id="pace-hint">(m:ss /mi)</span></label>
         <div class="unit-toggle" id="unit-toggle">
           <button type="button" class="toggle-btn active" data-unit="mi">min/mi</button>
           <button type="button" class="toggle-btn" data-unit="km">min/km</button>
@@ -452,10 +452,10 @@
       </div>
       <div class="control-row">
         <div class="input-with-badge">
-          <input type="text" id="pace-text" value="08:03" placeholder="08:00" />
+          <input type="text" id="pace-text" value="8:03" placeholder="8:00" />
           <span class="input-badge" id="pace-unit-badge">/mi</span>
         </div>
-        <div class="error-msg" id="pace-error">Please enter a valid pace (e.g. 08:00 or 8:00)</div>
+        <div class="error-msg" id="pace-error">Please enter a valid pace (e.g. 8:00)</div>
         <div>
           <input type="range" id="pace-slider" min="240" max="1200" step="1" value="483">
           <div class="slider-limits">
@@ -564,9 +564,9 @@
       }
     }
 
-    // Helper: Format seconds to HH:MM:SS or MM:SS
+    // Helper: Format seconds to H:MM:SS or M:SS (without leading zero on highest unit)
     function formatTime(totalSeconds, alwaysIncludeHours = false) {
-      if (isNaN(totalSeconds) || totalSeconds < 0) return '00:00';
+      if (isNaN(totalSeconds) || totalSeconds < 0) return '0:00';
       totalSeconds = Math.round(totalSeconds);
       const hours = Math.floor(totalSeconds / 3600);
       const minutes = Math.floor((totalSeconds % 3600) / 60);
@@ -575,9 +575,9 @@
       const pad = (num) => String(num).padStart(2, '0');
 
       if (hours > 0 || alwaysIncludeHours) {
-        return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+        return `${hours}:${pad(minutes)}:${pad(seconds)}`;
       } else {
-        return `${pad(minutes)}:${pad(seconds)}`;
+        return `${minutes}:${pad(seconds)}`;
       }
     }
 
@@ -643,7 +643,7 @@
       paceMaxLabel.textContent = `${formatTime(max)} /${currentUnit}`;
 
       paceLabel.childNodes[0].textContent = currentUnit === 'mi' ? 'Pace (Minute Miles) ' : 'Pace (Minute Kilometers) ';
-      paceHint.textContent = `(mm:ss /${currentUnit})`;
+      paceHint.textContent = `(m:ss /${currentUnit})`;
       paceUnitBadge.textContent = `/${currentUnit}`;
 
       if (currentUnit === 'mi') {
