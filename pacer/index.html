@@ -87,6 +87,46 @@
       margin-left: 0.5rem;
     }
 
+    .label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .label-row label {
+      margin-bottom: 0;
+    }
+
+    .unit-toggle {
+      display: inline-flex;
+      background-color: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 8px;
+      padding: 2px;
+    }
+
+    .toggle-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      padding: 0.25rem 0.65rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    .toggle-btn.active {
+      background-color: var(--primary);
+      color: #ffffff;
+    }
+
+    .toggle-btn:hover:not(.active) {
+      color: var(--text-main);
+    }
+
     select, input[type="text"] {
       width: 100%;
       padding: 0.75rem 1rem;
@@ -251,10 +291,15 @@
     <div class="form-group">
       <label for="distance-select">Race Distance</label>
       <select id="distance-select">
-        <option value="42.195" data-miles="26.21875">Marathon (42.195 km / 26.22 mi)</option>
+        <option value="160.9344" data-miles="100">100 Miles (160.93 km)</option>
+        <option value="100" data-miles="62.13712">100 km (62.14 mi)</option>
+        <option value="80.4672" data-miles="50">50 Miles (80.47 km)</option>
+        <option value="50" data-miles="31.06856">50 km (31.07 mi)</option>
+        <option value="42.195" data-miles="26.21875" selected>Marathon (42.195 km / 26.22 mi)</option>
         <option value="21.0975" data-miles="13.109375">Half Marathon (21.1 km / 13.11 mi)</option>
         <option value="16.09344" data-miles="10">10 Miles (16.09 km)</option>
-        <option value="10" data-miles="6.21371" selected>10 km (6.21 mi)</option>
+        <option value="10" data-miles="6.21371">10 km (6.21 mi)</option>
+        <option value="8.04672" data-miles="5">5 Miles (8.05 km)</option>
         <option value="5" data-miles="3.10686">5 km (3.11 mi)</option>
         <option value="1.609344" data-miles="1">1 Mile (1.61 km)</option>
       </select>
@@ -281,18 +326,24 @@
 
     <!-- Control 3 & 4: Pace Text & Slider -->
     <div class="form-group">
-      <label for="pace-text">Pace (Minute Miles) <span class="hint">(mm:ss /mi)</span></label>
+      <div class="label-row">
+        <label for="pace-text" id="pace-label">Pace (Minute Miles) <span class="hint" id="pace-hint">(mm:ss /mi)</span></label>
+        <div class="unit-toggle" id="unit-toggle">
+          <button type="button" class="toggle-btn active" data-unit="mi">min/mi</button>
+          <button type="button" class="toggle-btn" data-unit="km">min/km</button>
+        </div>
+      </div>
       <div class="control-row">
         <div class="input-with-badge">
           <input type="text" id="pace-text" value="08:03" placeholder="08:00" />
-          <span class="input-badge">/mi</span>
+          <span class="input-badge" id="pace-unit-badge">/mi</span>
         </div>
         <div class="error-msg" id="pace-error">Please enter a valid pace (e.g. 08:00 or 8:00)</div>
         <div>
           <input type="range" id="pace-slider" min="240" max="1200" step="1" value="483">
           <div class="slider-limits">
-            <span>4:00 /mi</span>
-            <span>20:00 /mi</span>
+            <span id="pace-min-label">4:00 /mi</span>
+            <span id="pace-max-label">20:00 /mi</span>
           </div>
         </div>
       </div>
@@ -301,8 +352,8 @@
     <!-- Calculated Equivalent Stats -->
     <div class="stats-grid">
       <div class="stat-card">
-        <div class="label">Pace (/km)</div>
-        <div class="value" id="pace-km-val">5:00 /km</div>
+        <div class="label" id="alt-pace-label">Pace (/km)</div>
+        <div class="value" id="alt-pace-val">5:00 /km</div>
       </div>
       <div class="stat-card">
         <div class="label">Speed (mph)</div>
@@ -321,9 +372,13 @@
   </footer>
 
   <script>
+    // Constants
+    const PACE_MIN_SEC_MILE = 240;  // 4:00 /mi
+    const PACE_MAX_SEC_MILE = 1200; // 20:00 /mi
+    const KM_PER_MILE = 1.609344;
+
     // State management
-    const PACE_MIN_SEC = 240;  // 4:00 /mi
-    const PACE_MAX_SEC = 1200; // 20:00 /mi
+    let currentUnit = 'mi'; // 'mi' or 'km'
 
     // DOM Elements
     const distanceSelect = document.getElementById('distance-select');
@@ -334,11 +389,18 @@
     const paceText = document.getElementById('pace-text');
     const paceSlider = document.getElementById('pace-slider');
     const paceError = document.getElementById('pace-error');
+    const paceLabel = document.getElementById('pace-label');
+    const paceHint = document.getElementById('pace-hint');
+    const paceUnitBadge = document.getElementById('pace-unit-badge');
+    const unitToggle = document.getElementById('unit-toggle');
 
     const targetTimeMinLabel = document.getElementById('target-time-min-label');
     const targetTimeMaxLabel = document.getElementById('target-time-max-label');
+    const paceMinLabel = document.getElementById('pace-min-label');
+    const paceMaxLabel = document.getElementById('pace-max-label');
 
-    const paceKmVal = document.getElementById('pace-km-val');
+    const altPaceLabel = document.getElementById('alt-pace-label');
+    const altPaceVal = document.getElementById('alt-pace-val');
     const speedMphVal = document.getElementById('speed-mph-val');
     const speedKmhVal = document.getElementById('speed-kmh-val');
 
@@ -346,6 +408,18 @@
     function getDistanceInMiles() {
       const selectedOption = distanceSelect.options[distanceSelect.selectedIndex];
       return parseFloat(selectedOption.getAttribute('data-miles'));
+    }
+
+    // Helper: Get pace min/max range in current unit seconds
+    function getPaceMinMaxSec() {
+      if (currentUnit === 'mi') {
+        return { min: PACE_MIN_SEC_MILE, max: PACE_MAX_SEC_MILE };
+      } else {
+        return {
+          min: Math.round(PACE_MIN_SEC_MILE / KM_PER_MILE),
+          max: Math.round(PACE_MAX_SEC_MILE / KM_PER_MILE)
+        };
+      }
     }
 
     // Helper: Format seconds to HH:MM:SS or MM:SS
@@ -407,8 +481,8 @@
     // Update target time slider range based on distance
     function updateTargetTimeSliderBounds() {
       const miles = getDistanceInMiles();
-      const minTargetSec = Math.round(PACE_MIN_SEC * miles);
-      const maxTargetSec = Math.round(PACE_MAX_SEC * miles);
+      const minTargetSec = Math.round(PACE_MIN_SEC_MILE * miles);
+      const maxTargetSec = Math.round(PACE_MAX_SEC_MILE * miles);
 
       targetTimeSlider.min = minTargetSec;
       targetTimeSlider.max = maxTargetSec;
@@ -417,42 +491,76 @@
       targetTimeMaxLabel.textContent = formatTime(maxTargetSec, maxTargetSec >= 3600);
     }
 
-    // Sync non-interactive stats (Pace min/km, Speed mph, Speed km/h)
-    function updateSecondaryStats(paceSecPerMile) {
-      const miles = getDistanceInMiles();
-      const km = parseFloat(distanceSelect.value);
+    // Update pace slider range and UI text labels based on active unit
+    function updatePaceUIForUnit() {
+      const { min, max } = getPaceMinMaxSec();
+      paceSlider.min = min;
+      paceSlider.max = max;
 
-      // Pace min/km = paceSecPerMile / 1.609344
-      const paceSecPerKm = paceSecPerMile / 1.609344;
-      paceKmVal.textContent = `${formatTime(paceSecPerKm)} /km`;
+      paceMinLabel.textContent = `${formatTime(min)} /${currentUnit}`;
+      paceMaxLabel.textContent = `${formatTime(max)} /${currentUnit}`;
+
+      paceLabel.childNodes[0].textContent = currentUnit === 'mi' ? 'Pace (Minute Miles) ' : 'Pace (Minute Kilometers) ';
+      paceHint.textContent = `(mm:ss /${currentUnit})`;
+      paceUnitBadge.textContent = `/${currentUnit}`;
+
+      if (currentUnit === 'mi') {
+        altPaceLabel.textContent = 'Pace (/km)';
+      } else {
+        altPaceLabel.textContent = 'Pace (/mi)';
+      }
+    }
+
+    // Convert display pace seconds (in currentUnit) to sec/mile
+    function displayPaceToSecPerMile(displaySec) {
+      return currentUnit === 'mi' ? displaySec : displaySec * KM_PER_MILE;
+    }
+
+    // Convert sec/mile to display pace seconds (in currentUnit)
+    function secPerMileToDisplayPace(secPerMile) {
+      return currentUnit === 'mi' ? secPerMile : secPerMile / KM_PER_MILE;
+    }
+
+    // Sync non-interactive stats
+    function updateSecondaryStats(paceSecPerMile) {
+      const paceSecPerKm = paceSecPerMile / KM_PER_MILE;
+
+      if (currentUnit === 'mi') {
+        altPaceVal.textContent = `${formatTime(paceSecPerKm)} /km`;
+      } else {
+        altPaceVal.textContent = `${formatTime(paceSecPerMile)} /mi`;
+      }
 
       // Speed mph = 3600 / paceSecPerMile
       const mph = 3600 / paceSecPerMile;
       speedMphVal.textContent = `${mph.toFixed(2)} mph`;
 
-      // Speed km/h = mph * 1.609344
-      const kmh = mph * 1.609344;
+      // Speed km/h = mph * KM_PER_MILE
+      const kmh = mph * KM_PER_MILE;
       speedKmhVal.textContent = `${kmh.toFixed(1)} km/h`;
     }
 
     // Master update from a primary change source
-    // Source can be: 'distance', 'targetText', 'targetSlider', 'paceText', 'paceSlider'
     function syncState(source) {
       const miles = getDistanceInMiles();
+      const { min: paceMinSec, max: paceMaxSec } = getPaceMinMaxSec();
 
       if (source === 'distance') {
-        // When distance changes, keep pace constant and update target time
         updateTargetTimeSliderBounds();
-        let currentPaceSec = parseInt(paceSlider.value, 10);
-        if (isNaN(currentPaceSec) || currentPaceSec <= 0) currentPaceSec = 480;
+        let currentDisplayPaceSec = parseInt(paceSlider.value, 10);
+        if (isNaN(currentDisplayPaceSec) || currentDisplayPaceSec <= 0) {
+          currentDisplayPaceSec = currentUnit === 'mi' ? 480 : Math.round(480 / KM_PER_MILE);
+        }
 
-        const newTargetTimeSec = Math.round(currentPaceSec * miles);
-        targetTimeSlider.value = newTargetTimeSec;
+        const paceSecPerMile = displayPaceToSecPerMile(currentDisplayPaceSec);
+        const newTargetTimeSec = Math.round(paceSecPerMile * miles);
+
+        targetTimeSlider.value = Math.min(Math.max(newTargetTimeSec, targetTimeSlider.min), targetTimeSlider.max);
         targetTimeText.value = formatTime(newTargetTimeSec, newTargetTimeSec >= 3600);
         targetTimeError.style.display = 'none';
         targetTimeText.classList.remove('invalid');
 
-        updateSecondaryStats(currentPaceSec);
+        updateSecondaryStats(paceSecPerMile);
       }
       else if (source === 'targetSlider') {
         const targetSec = parseInt(targetTimeSlider.value, 10);
@@ -460,13 +568,15 @@
         targetTimeError.style.display = 'none';
         targetTimeText.classList.remove('invalid');
 
-        const paceSec = targetSec / miles;
-        paceSlider.value = Math.round(paceSec);
-        paceText.value = formatTime(paceSec);
+        const paceSecPerMile = targetSec / miles;
+        const displayPaceSec = secPerMileToDisplayPace(paceSecPerMile);
+
+        paceSlider.value = Math.round(displayPaceSec);
+        paceText.value = formatTime(displayPaceSec);
         paceError.style.display = 'none';
         paceText.classList.remove('invalid');
 
-        updateSecondaryStats(paceSec);
+        updateSecondaryStats(paceSecPerMile);
       }
       else if (source === 'targetText') {
         const parsedSec = parseTimeToSeconds(targetTimeText.value);
@@ -474,56 +584,89 @@
           targetTimeError.style.display = 'none';
           targetTimeText.classList.remove('invalid');
 
-          // Clamp slider range if out of bounds, but allow values
           targetTimeSlider.value = Math.min(Math.max(parsedSec, targetTimeSlider.min), targetTimeSlider.max);
 
-          const paceSec = parsedSec / miles;
-          paceSlider.value = Math.min(Math.max(Math.round(paceSec), PACE_MIN_SEC), PACE_MAX_SEC);
-          paceText.value = formatTime(paceSec);
+          const paceSecPerMile = parsedSec / miles;
+          const displayPaceSec = secPerMileToDisplayPace(paceSecPerMile);
+
+          paceSlider.value = Math.min(Math.max(Math.round(displayPaceSec), paceMinSec), paceMaxSec);
+          paceText.value = formatTime(displayPaceSec);
           paceError.style.display = 'none';
           paceText.classList.remove('invalid');
 
-          updateSecondaryStats(paceSec);
+          updateSecondaryStats(paceSecPerMile);
         } else {
           targetTimeError.style.display = 'block';
           targetTimeText.classList.add('invalid');
         }
       }
       else if (source === 'paceSlider') {
-        const paceSec = parseInt(paceSlider.value, 10);
-        paceText.value = formatTime(paceSec);
+        const displayPaceSec = parseInt(paceSlider.value, 10);
+        paceText.value = formatTime(displayPaceSec);
         paceError.style.display = 'none';
         paceText.classList.remove('invalid');
 
-        const targetSec = Math.round(paceSec * miles);
+        const paceSecPerMile = displayPaceToSecPerMile(displayPaceSec);
+        const targetSec = Math.round(paceSecPerMile * miles);
+
         targetTimeSlider.value = Math.min(Math.max(targetSec, targetTimeSlider.min), targetTimeSlider.max);
         targetTimeText.value = formatTime(targetSec, targetSec >= 3600);
         targetTimeError.style.display = 'none';
         targetTimeText.classList.remove('invalid');
 
-        updateSecondaryStats(paceSec);
+        updateSecondaryStats(paceSecPerMile);
       }
       else if (source === 'paceText') {
-        const parsedPaceSec = parseTimeToSeconds(paceText.value);
-        if (parsedPaceSec !== null && parsedPaceSec > 0) {
+        const parsedDisplayPaceSec = parseTimeToSeconds(paceText.value);
+        if (parsedDisplayPaceSec !== null && parsedDisplayPaceSec > 0) {
           paceError.style.display = 'none';
           paceText.classList.remove('invalid');
 
-          paceSlider.value = Math.min(Math.max(parsedPaceSec, PACE_MIN_SEC), PACE_MAX_SEC);
+          paceSlider.value = Math.min(Math.max(parsedDisplayPaceSec, paceMinSec), paceMaxSec);
 
-          const targetSec = Math.round(parsedPaceSec * miles);
+          const paceSecPerMile = displayPaceToSecPerMile(parsedDisplayPaceSec);
+          const targetSec = Math.round(paceSecPerMile * miles);
+
           targetTimeSlider.value = Math.min(Math.max(targetSec, targetTimeSlider.min), targetTimeSlider.max);
           targetTimeText.value = formatTime(targetSec, targetSec >= 3600);
           targetTimeError.style.display = 'none';
           targetTimeText.classList.remove('invalid');
 
-          updateSecondaryStats(parsedPaceSec);
+          updateSecondaryStats(paceSecPerMile);
         } else {
           paceError.style.display = 'block';
           paceText.classList.add('invalid');
         }
       }
     }
+
+    // Handle Unit Toggle
+    unitToggle.addEventListener('click', (e) => {
+      const btn = e.target.closest('.toggle-btn');
+      if (!btn) return;
+      const newUnit = btn.getAttribute('data-unit');
+      if (newUnit === currentUnit) return;
+
+      // Preserve current pace value in sec/mile before converting UI
+      const oldDisplayPaceSec = parseInt(paceSlider.value, 10);
+      const currentPaceSecPerMile = displayPaceToSecPerMile(oldDisplayPaceSec);
+
+      // Update unit state and UI buttons
+      currentUnit = newUnit;
+      unitToggle.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      updatePaceUIForUnit();
+
+      // Convert pace to new unit display
+      const newDisplayPaceSec = secPerMileToDisplayPace(currentPaceSecPerMile);
+      const { min: paceMinSec, max: paceMaxSec } = getPaceMinMaxSec();
+
+      paceSlider.value = Math.min(Math.max(Math.round(newDisplayPaceSec), paceMinSec), paceMaxSec);
+      paceText.value = formatTime(newDisplayPaceSec);
+
+      updateSecondaryStats(currentPaceSecPerMile);
+    });
 
     // Event Listeners
     distanceSelect.addEventListener('change', () => syncState('distance'));
@@ -536,6 +679,7 @@
 
     // Initialize UI on load
     updateTargetTimeSliderBounds();
+    updatePaceUIForUnit();
     syncState('distance');
   </script>
 </body>
