@@ -271,6 +271,117 @@
       border-color: #f85149 !important;
     }
 
+    /* Splits Section */
+    .splits-section {
+      margin-top: 1.5rem;
+      border-top: 1px solid var(--card-border);
+      padding-top: 1.25rem;
+    }
+
+    .splits-details {
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 10px;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+
+    .splits-details[open] {
+      border-color: var(--card-border);
+    }
+
+    .splits-summary {
+      padding: 0.85rem 1.15rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-main);
+      cursor: pointer;
+      user-select: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      list-style: none;
+      transition: background-color 0.2s;
+    }
+
+    .splits-summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .splits-summary:hover {
+      background-color: rgba(255, 255, 255, 0.03);
+      color: var(--primary);
+    }
+
+    .splits-summary-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .splits-arrow {
+      font-size: 0.75rem;
+      transition: transform 0.2s ease;
+      color: var(--text-muted);
+    }
+
+    .splits-details[open] .splits-arrow {
+      transform: rotate(180deg);
+    }
+
+    .splits-table-wrapper {
+      max-height: 280px;
+      overflow-y: auto;
+      border-top: 1px solid var(--input-border);
+    }
+
+    .splits-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      text-align: left;
+    }
+
+    .splits-table th, .splits-table td {
+      padding: 0.6rem 1rem;
+    }
+
+    .splits-table th {
+      position: sticky;
+      top: 0;
+      background-color: var(--card-bg);
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--input-border);
+      z-index: 1;
+    }
+
+    .splits-table tr:nth-child(even) {
+      background-color: rgba(255, 255, 255, 0.015);
+    }
+
+    .splits-table tr:hover {
+      background-color: rgba(88, 166, 255, 0.05);
+    }
+
+    .splits-table td {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: var(--text-main);
+    }
+
+    .splits-table td.split-name {
+      font-weight: 600;
+    }
+
+    .splits-table tr.finish-row td {
+      color: var(--primary-hover);
+      font-weight: 600;
+      background-color: rgba(88, 166, 255, 0.08);
+    }
+
     footer {
       margin-top: 2rem;
       text-align: center;
@@ -365,6 +476,30 @@
       </div>
     </div>
 
+    <!-- Expandable Mile/Km Splits -->
+    <div class="splits-section">
+      <details class="splits-details" id="splits-details">
+        <summary class="splits-summary">
+          <span class="splits-summary-title" id="splits-title">📊 Mile Splits</span>
+          <span class="splits-arrow">▼</span>
+        </summary>
+        <div class="splits-table-wrapper">
+          <table class="splits-table">
+            <thead>
+              <tr>
+                <th>Split</th>
+                <th>Distance</th>
+                <th>Split Time</th>
+                <th>Elapsed Time</th>
+              </tr>
+            </thead>
+            <tbody id="splits-tbody">
+            </tbody>
+          </table>
+        </div>
+      </details>
+    </div>
+
   </div>
 
   <footer>
@@ -403,6 +538,9 @@
     const altPaceVal = document.getElementById('alt-pace-val');
     const speedMphVal = document.getElementById('speed-mph-val');
     const speedKmhVal = document.getElementById('speed-kmh-val');
+
+    const splitsTitle = document.getElementById('splits-title');
+    const splitsTbody = document.getElementById('splits-tbody');
 
     // Helper: Get distance in miles
     function getDistanceInMiles() {
@@ -521,6 +659,52 @@
       return currentUnit === 'mi' ? secPerMile : secPerMile / KM_PER_MILE;
     }
 
+    // Render Mile / Km Splits
+    function renderSplits(paceSecPerMile) {
+      const unitLabel = currentUnit === 'mi' ? 'Mile' : 'Kilometer';
+      const unitAbbr = currentUnit === 'mi' ? 'mi' : 'km';
+      const unitPaceSec = currentUnit === 'mi' ? paceSecPerMile : paceSecPerMile / KM_PER_MILE;
+
+      const totalDist = currentUnit === 'mi'
+        ? getDistanceInMiles()
+        : parseFloat(distanceSelect.value);
+
+      splitsTitle.textContent = `📊 ${unitLabel} Splits`;
+      splitsTbody.innerHTML = '';
+
+      const fullUnits = Math.floor(totalDist);
+      const remainder = totalDist - fullUnits;
+
+      for (let i = 1; i <= fullUnits; i++) {
+        const splitTime = unitPaceSec;
+        const elapsedTime = unitPaceSec * i;
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="split-name">${unitLabel} ${i}</td>
+          <td>1 ${unitAbbr}</td>
+          <td>${formatTime(splitTime)}</td>
+          <td>${formatTime(elapsedTime, elapsedTime >= 3600)}</td>
+        `;
+        splitsTbody.appendChild(tr);
+      }
+
+      if (remainder > 0.001) {
+        const splitTime = unitPaceSec * remainder;
+        const elapsedTime = unitPaceSec * totalDist;
+
+        const tr = document.createElement('tr');
+        tr.className = 'finish-row';
+        tr.innerHTML = `
+          <td class="split-name">Finish</td>
+          <td>${remainder.toFixed(2)} ${unitAbbr}</td>
+          <td>${formatTime(splitTime)}</td>
+          <td>${formatTime(elapsedTime, elapsedTime >= 3600)}</td>
+        `;
+        splitsTbody.appendChild(tr);
+      }
+    }
+
     // Sync non-interactive stats
     function updateSecondaryStats(paceSecPerMile) {
       const paceSecPerKm = paceSecPerMile / KM_PER_MILE;
@@ -538,6 +722,8 @@
       // Speed km/h = mph * KM_PER_MILE
       const kmh = mph * KM_PER_MILE;
       speedKmhVal.textContent = `${kmh.toFixed(1)} km/h`;
+
+      renderSplits(paceSecPerMile);
     }
 
     // Master update from a primary change source
