@@ -3,60 +3,540 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Race Pace Calculator</title>
+  <title>Pacer - Race Pace Calculator</title>
   <style>
+    :root {
+      --bg-color: #0d1117;
+      --card-bg: #161b22;
+      --card-border: #30363d;
+      --primary: #58a6ff;
+      --primary-hover: #79c0ff;
+      --accent: #2ea043;
+      --accent-orange: #f0883e;
+      --text-main: #c9d1d9;
+      --text-muted: #8b949e;
+      --input-bg: #21262d;
+      --input-border: #363b42;
+      --input-focus: #58a6ff;
+      --font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
+
     body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      font-family: var(--font-family);
+      background-color: var(--bg-color);
+      color: var(--text-main);
       min-height: 100vh;
-      background-color: #0d1117;
-      color: #c9d1d9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem;
     }
+
     .container {
+      width: 100%;
+      max-width: 640px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    header {
       text-align: center;
-      padding: 2.5rem;
-      border-radius: 12px;
-      background: #161b22;
-      border: 1px solid #30363d;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-      max-width: 480px;
-      width: 90%;
+      margin-bottom: 2rem;
     }
-    h1 {
-      font-size: 2.5rem;
-      color: #58a6ff;
-      margin-bottom: 0.75rem;
+
+    header h1 {
+      font-size: 2.25rem;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
     }
-    p {
+
+    header p {
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.75rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 0.5rem;
+    }
+
+    .hint {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: normal;
+      margin-left: 0.5rem;
+    }
+
+    select, input[type="text"] {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background-color: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 8px;
+      color: #ffffff;
       font-size: 1.1rem;
-      color: #8b949e;
-      line-height: 1.5;
+      font-family: inherit;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
-    .badge {
-      display: inline-block;
-      margin-top: 1.5rem;
-      padding: 0.4rem 0.8rem;
+
+    select:focus, input[type="text"]:focus {
+      outline: none;
+      border-color: var(--input-focus);
+      box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.2);
+    }
+
+    .control-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .input-with-badge {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-with-badge input {
+      padding-right: 4rem;
+    }
+
+    .input-badge {
+      position: absolute;
+      right: 0.75rem;
       font-size: 0.85rem;
       font-weight: 600;
-      color: #f0883e;
-      background: rgba(240, 136, 62, 0.15);
-      border-radius: 20px;
-      border: 1px solid rgba(240, 136, 62, 0.3);
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    /* Range Slider Styling */
+    .slider-container {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 8px;
+      border-radius: 4px;
+      background: var(--input-bg);
+      outline: none;
+      border: 1px solid var(--input-border);
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--primary);
+      cursor: pointer;
+      box-shadow: 0 0 8px rgba(88, 166, 255, 0.5);
+      transition: background-color 0.2s, transform 0.1s;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background: var(--primary-hover);
+      transform: scale(1.1);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--primary);
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 0 8px rgba(88, 166, 255, 0.5);
+      transition: background-color 0.2s, transform 0.1s;
+    }
+
+    input[type="range"]::-moz-range-thumb:hover {
+      background: var(--primary-hover);
+      transform: scale(1.1);
+    }
+
+    .slider-limits {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--card-border);
+    }
+
+    .stat-card {
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 10px;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .stat-card .label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-card .value {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .error-msg {
+      color: #f85149;
+      font-size: 0.85rem;
+      margin-top: 0.35rem;
+      display: none;
+    }
+
+    .invalid {
+      border-color: #f85149 !important;
+    }
+
+    footer {
+      margin-top: 2rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
     }
   </style>
 </head>
 <body>
+
   <div class="container">
-    <h1>Race Pace Calculator 🏃‍♂️</h1>
-    <p>Your static site is successfully deployed and running on Cloudflare Pages.</p>
-    <div class="badge">🚀 Site Status: Online</div>
+    <header>
+      <h1>🏃‍♂️ Pacer</h1>
+      <p>Interactive Race Pace & Target Time Calculator</p>
+    </header>
+
+    <!-- Race Distance Selection Dropdown -->
+    <div class="form-group">
+      <label for="distance-select">Race Distance</label>
+      <select id="distance-select">
+        <option value="42.195" data-miles="26.21875">Marathon (42.195 km / 26.22 mi)</option>
+        <option value="21.0975" data-miles="13.109375">Half Marathon (21.1 km / 13.11 mi)</option>
+        <option value="16.09344" data-miles="10">10 Miles (16.09 km)</option>
+        <option value="10" data-miles="6.21371" selected>10 km (6.21 mi)</option>
+        <option value="5" data-miles="3.10686">5 km (3.11 mi)</option>
+        <option value="1.609344" data-miles="1">1 Mile (1.61 km)</option>
+      </select>
+    </div>
+
+    <!-- Control 1 & 2: Target Time Text & Slider -->
+    <div class="form-group">
+      <label for="target-time-text">Target Time <span class="hint">(hh:mm:ss or mm:ss)</span></label>
+      <div class="control-row">
+        <div class="input-with-badge">
+          <input type="text" id="target-time-text" value="00:50:00" placeholder="00:50:00" />
+          <span class="input-badge">time</span>
+        </div>
+        <div class="error-msg" id="target-time-error">Please enter a valid time (e.g. 00:50:00)</div>
+        <div>
+          <input type="range" id="target-time-slider" min="600" max="7200" step="1" value="3000">
+          <div class="slider-limits">
+            <span id="target-time-min-label">10:00</span>
+            <span id="target-time-max-label">2:00:00</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Control 3 & 4: Pace Text & Slider -->
+    <div class="form-group">
+      <label for="pace-text">Pace (Minute Miles) <span class="hint">(mm:ss /mi)</span></label>
+      <div class="control-row">
+        <div class="input-with-badge">
+          <input type="text" id="pace-text" value="08:03" placeholder="08:00" />
+          <span class="input-badge">/mi</span>
+        </div>
+        <div class="error-msg" id="pace-error">Please enter a valid pace (e.g. 08:00 or 8:00)</div>
+        <div>
+          <input type="range" id="pace-slider" min="240" max="1200" step="1" value="483">
+          <div class="slider-limits">
+            <span>4:00 /mi</span>
+            <span>20:00 /mi</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Calculated Equivalent Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="label">Pace (/km)</div>
+        <div class="value" id="pace-km-val">5:00 /km</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Speed (mph)</div>
+        <div class="value" id="speed-mph-val">7.45 mph</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Speed (km/h)</div>
+        <div class="value" id="speed-kmh-val">12.0 km/h</div>
+      </div>
+    </div>
+
   </div>
+
+  <footer>
+    <p>Built for runners. Fast, precise, and interactive.</p>
+  </footer>
+
+  <script>
+    // State management
+    const PACE_MIN_SEC = 240;  // 4:00 /mi
+    const PACE_MAX_SEC = 1200; // 20:00 /mi
+
+    // DOM Elements
+    const distanceSelect = document.getElementById('distance-select');
+    const targetTimeText = document.getElementById('target-time-text');
+    const targetTimeSlider = document.getElementById('target-time-slider');
+    const targetTimeError = document.getElementById('target-time-error');
+
+    const paceText = document.getElementById('pace-text');
+    const paceSlider = document.getElementById('pace-slider');
+    const paceError = document.getElementById('pace-error');
+
+    const targetTimeMinLabel = document.getElementById('target-time-min-label');
+    const targetTimeMaxLabel = document.getElementById('target-time-max-label');
+
+    const paceKmVal = document.getElementById('pace-km-val');
+    const speedMphVal = document.getElementById('speed-mph-val');
+    const speedKmhVal = document.getElementById('speed-kmh-val');
+
+    // Helper: Get distance in miles
+    function getDistanceInMiles() {
+      const selectedOption = distanceSelect.options[distanceSelect.selectedIndex];
+      return parseFloat(selectedOption.getAttribute('data-miles'));
+    }
+
+    // Helper: Format seconds to HH:MM:SS or MM:SS
+    function formatTime(totalSeconds, alwaysIncludeHours = false) {
+      if (isNaN(totalSeconds) || totalSeconds < 0) return '00:00';
+      totalSeconds = Math.round(totalSeconds);
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+
+      const pad = (num) => String(num).padStart(2, '0');
+
+      if (hours > 0 || alwaysIncludeHours) {
+        return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+      } else {
+        return `${pad(minutes)}:${pad(seconds)}`;
+      }
+    }
+
+    // Helper: Parse HH:MM:SS or MM:SS or raw minutes string into seconds
+    function parseTimeToSeconds(timeStr) {
+      if (!timeStr || typeof timeStr !== 'string') return null;
+      const str = timeStr.trim();
+      if (!str) return null;
+
+      const parts = str.split(':').map(p => p.trim());
+
+      // If user typed e.g. "8.5" or "8"
+      if (parts.length === 1) {
+        const val = parseFloat(parts[0]);
+        if (!isNaN(val) && val > 0) {
+          return Math.round(val * 60); // interpret as minutes
+        }
+        return null;
+      }
+
+      if (parts.length === 2) {
+        const mins = parseInt(parts[0], 10);
+        const secs = parseInt(parts[1], 10);
+        if (!isNaN(mins) && !isNaN(secs) && mins >= 0 && secs >= 0 && secs < 60) {
+          return mins * 60 + secs;
+        }
+        return null;
+      }
+
+      if (parts.length === 3) {
+        const hrs = parseInt(parts[0], 10);
+        const mins = parseInt(parts[1], 10);
+        const secs = parseInt(parts[2], 10);
+        if (!isNaN(hrs) && !isNaN(mins) && !isNaN(secs) && hrs >= 0 && mins >= 0 && mins < 60 && secs >= 0 && secs < 60) {
+          return hrs * 3600 + mins * 60 + secs;
+        }
+        return null;
+      }
+
+      return null;
+    }
+
+    // Update target time slider range based on distance
+    function updateTargetTimeSliderBounds() {
+      const miles = getDistanceInMiles();
+      const minTargetSec = Math.round(PACE_MIN_SEC * miles);
+      const maxTargetSec = Math.round(PACE_MAX_SEC * miles);
+
+      targetTimeSlider.min = minTargetSec;
+      targetTimeSlider.max = maxTargetSec;
+
+      targetTimeMinLabel.textContent = formatTime(minTargetSec, minTargetSec >= 3600);
+      targetTimeMaxLabel.textContent = formatTime(maxTargetSec, maxTargetSec >= 3600);
+    }
+
+    // Sync non-interactive stats (Pace min/km, Speed mph, Speed km/h)
+    function updateSecondaryStats(paceSecPerMile) {
+      const miles = getDistanceInMiles();
+      const km = parseFloat(distanceSelect.value);
+
+      // Pace min/km = paceSecPerMile / 1.609344
+      const paceSecPerKm = paceSecPerMile / 1.609344;
+      paceKmVal.textContent = `${formatTime(paceSecPerKm)} /km`;
+
+      // Speed mph = 3600 / paceSecPerMile
+      const mph = 3600 / paceSecPerMile;
+      speedMphVal.textContent = `${mph.toFixed(2)} mph`;
+
+      // Speed km/h = mph * 1.609344
+      const kmh = mph * 1.609344;
+      speedKmhVal.textContent = `${kmh.toFixed(1)} km/h`;
+    }
+
+    // Master update from a primary change source
+    // Source can be: 'distance', 'targetText', 'targetSlider', 'paceText', 'paceSlider'
+    function syncState(source) {
+      const miles = getDistanceInMiles();
+
+      if (source === 'distance') {
+        // When distance changes, keep pace constant and update target time
+        updateTargetTimeSliderBounds();
+        let currentPaceSec = parseInt(paceSlider.value, 10);
+        if (isNaN(currentPaceSec) || currentPaceSec <= 0) currentPaceSec = 480;
+
+        const newTargetTimeSec = Math.round(currentPaceSec * miles);
+        targetTimeSlider.value = newTargetTimeSec;
+        targetTimeText.value = formatTime(newTargetTimeSec, newTargetTimeSec >= 3600);
+        targetTimeError.style.display = 'none';
+        targetTimeText.classList.remove('invalid');
+
+        updateSecondaryStats(currentPaceSec);
+      }
+      else if (source === 'targetSlider') {
+        const targetSec = parseInt(targetTimeSlider.value, 10);
+        targetTimeText.value = formatTime(targetSec, targetSec >= 3600);
+        targetTimeError.style.display = 'none';
+        targetTimeText.classList.remove('invalid');
+
+        const paceSec = targetSec / miles;
+        paceSlider.value = Math.round(paceSec);
+        paceText.value = formatTime(paceSec);
+        paceError.style.display = 'none';
+        paceText.classList.remove('invalid');
+
+        updateSecondaryStats(paceSec);
+      }
+      else if (source === 'targetText') {
+        const parsedSec = parseTimeToSeconds(targetTimeText.value);
+        if (parsedSec !== null && parsedSec > 0) {
+          targetTimeError.style.display = 'none';
+          targetTimeText.classList.remove('invalid');
+
+          // Clamp slider range if out of bounds, but allow values
+          targetTimeSlider.value = Math.min(Math.max(parsedSec, targetTimeSlider.min), targetTimeSlider.max);
+
+          const paceSec = parsedSec / miles;
+          paceSlider.value = Math.min(Math.max(Math.round(paceSec), PACE_MIN_SEC), PACE_MAX_SEC);
+          paceText.value = formatTime(paceSec);
+          paceError.style.display = 'none';
+          paceText.classList.remove('invalid');
+
+          updateSecondaryStats(paceSec);
+        } else {
+          targetTimeError.style.display = 'block';
+          targetTimeText.classList.add('invalid');
+        }
+      }
+      else if (source === 'paceSlider') {
+        const paceSec = parseInt(paceSlider.value, 10);
+        paceText.value = formatTime(paceSec);
+        paceError.style.display = 'none';
+        paceText.classList.remove('invalid');
+
+        const targetSec = Math.round(paceSec * miles);
+        targetTimeSlider.value = Math.min(Math.max(targetSec, targetTimeSlider.min), targetTimeSlider.max);
+        targetTimeText.value = formatTime(targetSec, targetSec >= 3600);
+        targetTimeError.style.display = 'none';
+        targetTimeText.classList.remove('invalid');
+
+        updateSecondaryStats(paceSec);
+      }
+      else if (source === 'paceText') {
+        const parsedPaceSec = parseTimeToSeconds(paceText.value);
+        if (parsedPaceSec !== null && parsedPaceSec > 0) {
+          paceError.style.display = 'none';
+          paceText.classList.remove('invalid');
+
+          paceSlider.value = Math.min(Math.max(parsedPaceSec, PACE_MIN_SEC), PACE_MAX_SEC);
+
+          const targetSec = Math.round(parsedPaceSec * miles);
+          targetTimeSlider.value = Math.min(Math.max(targetSec, targetTimeSlider.min), targetTimeSlider.max);
+          targetTimeText.value = formatTime(targetSec, targetSec >= 3600);
+          targetTimeError.style.display = 'none';
+          targetTimeText.classList.remove('invalid');
+
+          updateSecondaryStats(parsedPaceSec);
+        } else {
+          paceError.style.display = 'block';
+          paceText.classList.add('invalid');
+        }
+      }
+    }
+
+    // Event Listeners
+    distanceSelect.addEventListener('change', () => syncState('distance'));
+
+    targetTimeSlider.addEventListener('input', () => syncState('targetSlider'));
+    targetTimeText.addEventListener('input', () => syncState('targetText'));
+
+    paceSlider.addEventListener('input', () => syncState('paceSlider'));
+    paceText.addEventListener('input', () => syncState('paceText'));
+
+    // Initialize UI on load
+    updateTargetTimeSliderBounds();
+    syncState('distance');
+  </script>
 </body>
 </html>
