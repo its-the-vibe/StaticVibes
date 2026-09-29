@@ -332,6 +332,8 @@
     .splits-table-wrapper {
       max-height: 280px;
       overflow-y: auto;
+      overflow-x: hidden;
+      touch-action: pan-y;
       border-top: 1px solid var(--input-border);
     }
 
@@ -344,6 +346,10 @@
 
     .splits-table th, .splits-table td {
       padding: 0.6rem 1rem;
+    }
+
+    .splits-table th.text-right, .splits-table td.text-right {
+      text-align: right;
     }
 
     .splits-table th {
@@ -488,9 +494,7 @@
             <thead>
               <tr>
                 <th>Split</th>
-                <th>Distance</th>
-                <th>Split Time</th>
-                <th>Elapsed Time</th>
+                <th class="text-right">Elapsed Time</th>
               </tr>
             </thead>
             <tbody id="splits-tbody">
@@ -676,30 +680,24 @@
       const remainder = totalDist - fullUnits;
 
       for (let i = 1; i <= fullUnits; i++) {
-        const splitTime = unitPaceSec;
         const elapsedTime = unitPaceSec * i;
 
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td class="split-name">${unitLabel} ${i}</td>
-          <td>1 ${unitAbbr}</td>
-          <td>${formatTime(splitTime)}</td>
-          <td>${formatTime(elapsedTime, elapsedTime >= 3600)}</td>
+          <td class="text-right">${formatTime(elapsedTime, elapsedTime >= 3600)}</td>
         `;
         splitsTbody.appendChild(tr);
       }
 
       if (remainder > 0.001) {
-        const splitTime = unitPaceSec * remainder;
         const elapsedTime = unitPaceSec * totalDist;
 
         const tr = document.createElement('tr');
         tr.className = 'finish-row';
         tr.innerHTML = `
-          <td class="split-name">Finish</td>
-          <td>${remainder.toFixed(2)} ${unitAbbr}</td>
-          <td>${formatTime(splitTime)}</td>
-          <td>${formatTime(elapsedTime, elapsedTime >= 3600)}</td>
+          <td class="split-name">Finish (${remainder.toFixed(2)} ${unitAbbr})</td>
+          <td class="text-right">${formatTime(elapsedTime, elapsedTime >= 3600)}</td>
         `;
         splitsTbody.appendChild(tr);
       }
