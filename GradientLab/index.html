@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GradientLab - CSS Gradient Generator</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-container">
+    <header class="header">
+      <div class="logo-container">
+        <span class="logo-icon">🌈</span>
+        <h1>GradientLab</h1>
+      </div>
+      <p class="subtitle">Create, customize, and copy modern CSS gradients in real-time</p>
+    </header>
+
+    <main class="main-content">
+      <!-- Preview Section -->
+      <section class="preview-section">
+        <div class="card preview-card">
+          <div class="card-header">
+            <h2>Live Preview</h2>
+            <div class="preview-actions">
+              <button id="random-btn" class="btn btn-secondary" title="Generate Random Gradient">
+                <span class="btn-icon">🎲</span> Randomize
+              </button>
+              <button id="swap-btn" class="btn btn-secondary" title="Swap Start and End Colors">
+                <span class="btn-icon">🔄</span> Swap
+              </button>
+            </div>
+          </div>
+          <div id="gradient-preview" class="gradient-preview-box" aria-label="Gradient visual preview">
+            <span class="preview-badge" id="preview-angle-badge">90°</span>
+          </div>
+          <div class="code-output-container">
+            <label for="css-code-output" class="code-label">CSS Code</label>
+            <div class="code-box">
+              <code id="css-code-output">background: linear-gradient(90deg, #4f46e5 0%, #06b6d4 100%);</code>
+              <button id="copy-btn" class="btn btn-primary copy-btn" title="Copy CSS to Clipboard">
+                <span id="copy-icon" class="btn-icon">📋</span>
+                <span id="copy-text">Copy CSS</span>
+              </button>
+            </div>
+            <div id="copy-toast" class="copy-toast hidden" aria-live="polite">
+              Copied to clipboard! ✨
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Controls Section -->
+      <section class="controls-section">
+        <!-- Color Controls Card -->
+        <div class="card control-card">
+          <h2>Color Endpoints</h2>
+          <div class="color-controls-grid">
+            <!-- Start Color -->
+            <div class="control-group">
+              <label for="start-color-picker">Start Color</label>
+              <div class="color-input-wrapper">
+                <input type="color" id="start-color-picker" value="#4f46e5" aria-label="Start Color Picker" />
+                <input type="text" id="start-color-hex" value="#4f46e5" maxlength="7" spellcheck="false" aria-label="Start Color Hex Value" />
+              </div>
+            </div>
+
+            <!-- End Color -->
+            <div class="control-group">
+              <label for="end-color-picker">End Color</label>
+              <div class="color-input-wrapper">
+                <input type="color" id="end-color-picker" value="#06b6d4" aria-label="End Color Picker" />
+                <input type="text" id="end-color-hex" value="#06b6d4" maxlength="7" spellcheck="false" aria-label="End Color Hex Value" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Direction & Angle Controls Card -->
+        <div class="card control-card">
+          <h2>Direction & Angle</h2>
+          <div class="angle-control-group">
+            <div class="slider-header">
+              <label for="angle-slider">Angle (0° - 360°)</label>
+              <div class="angle-number-input-wrapper">
+                <input type="number" id="angle-input" min="0" max="360" value="90" aria-label="Gradient Angle Degrees" />
+                <span class="unit">°</span>
+              </div>
+            </div>
+            <input type="range" id="angle-slider" min="0" max="360" value="90" aria-label="Gradient Angle Slider" />
+          </div>
+
+          <div class="preset-angles">
+            <span class="preset-label">Quick Directions:</span>
+            <div class="preset-buttons-grid">
+              <button class="btn btn-chip preset-angle-btn" data-angle="0">0° (Up)</button>
+              <button class="btn btn-chip preset-angle-btn active" data-angle="90">90° (Right)</button>
+              <button class="btn btn-chip preset-angle-btn" data-angle="180">180° (Down)</button>
+              <button class="btn btn-chip preset-angle-btn" data-angle="270">270° (Left)</button>
+              <button class="btn btn-chip preset-angle-btn" data-angle="45">45° (Diag)</button>
+              <button class="btn btn-chip preset-angle-btn" data-angle="135">135° (Diag)</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Preset Templates Library Card -->
+        <div class="card control-card">
+          <h2>Preset Templates</h2>
+          <p class="presets-intro">Click any preset to load its colors and angle:</p>
+          <div id="presets-grid" class="presets-grid">
+            <!-- Preset items will be rendered by JS -->
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>GradientLab — Lightweight, fast CSS gradient generator tool</p>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
