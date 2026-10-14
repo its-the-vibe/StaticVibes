@@ -1,2 +1,2 @@
 # GradientLab
-A tool to generate CSS gradients
+A webtool to generate CSS gradients
