@@ -1,0 +1,22 @@
+{
+  "name": "localledger",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "lint": "eslint src/"
+  },
+  "devDependencies": {
+    "eslint": "^10.3.0",
+    "vite": "^8.0.1",
+    "vitest": "^4.1.5"
+  },
+  "dependencies": {
+    "chart.js": "^4.5.1",
+    "papaparse": "^5.5.3"
+  }
+}
