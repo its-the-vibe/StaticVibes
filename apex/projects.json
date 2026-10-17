@@ -4,37 +4,43 @@
       "name": "CatSlop",
       "description": "AI generated cat pics! 😺",
       "url": "catslop/",
-      "hide": false
+      "hide": false,
+      "subdomain": "catslop"
     },
     {
       "name": "GradientLab",
       "description": "A web tool to generate CSS gradients",
       "url": "GradientLab/",
-      "hide": false
+      "hide": false,
+      "subdomain": "gradientlab"
     },
     {
       "name": "LocalLedger",
       "description": "A local ledger application",
       "url": "LocalLedger/",
-      "hide": false
+      "hide": false,
+      "subdomain": "localledger"
     },
     {
       "name": "HelloWorld",
       "description": "A simple hello world page",
       "url": "HelloWorld/",
-      "hide": false
+      "hide": false,
+      "subdomain": "helloworld"
     },
     {
       "name": "pacer",
       "description": "A pacing tool",
       "url": "pacer/",
-      "hide": false
+      "hide": false,
+      "subdomain": "pacer"
     },
     {
       "name": "spinny-globe",
       "description": "A spinning 3D globe",
       "url": "spinny-globe/",
-      "hide": false
+      "hide": false,
+      "subdomain": "spinny-globe"
     }
   ]
 }

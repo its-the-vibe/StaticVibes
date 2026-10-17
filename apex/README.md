@@ -10,7 +10,8 @@ The apex `index.html` lists all projects from `projects.json`.
 |-------|-------------|
 | `name` | Display name (required) |
 | `description` | Short description |
-| `url` | Link to the project (required); relative (`GradientLab/`) or absolute |
+| `subdomain` | Subdomain the project is deployed on (e.g. `catslop` → `https://catslop.example.com/` when the apex is served from `example.com`; a leading `www.` is ignored) |
+| `url` | Link to the project; relative (`GradientLab/`) or absolute. Used when `subdomain` is unset or when previewing on localhost. Either `url` or `subdomain` is required |
 | `hide` | `true` hides the project without removing it from the config |
 
 Projects are shown in file order. Extra fields (tags, thumbnails…) are ignored and can be added later; styling lives in `index.css`.

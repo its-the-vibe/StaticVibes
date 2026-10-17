@@ -3,7 +3,17 @@
 
   function visibleProjects(config) {
     const list = config && Array.isArray(config.projects) ? config.projects : [];
-    return list.filter((p) => p && p.name && p.url && !p.hide);
+    return list.filter((p) => p && p.name && (p.url || p.subdomain) && !p.hide);
+  }
+
+  // Builds https://<subdomain>.<apex-domain>/ from the current host; on
+  // localhost/IPs (no real apex domain) falls back to the relative `url`.
+  function projectUrl(p, loc) {
+    if (p.subdomain && loc && loc.hostname && /[a-z]/i.test(loc.hostname) && loc.hostname.includes('.')) {
+      const apex = loc.hostname.replace(/^www\./, '');
+      return loc.protocol + '//' + p.subdomain + '.' + apex + (loc.port ? ':' + loc.port : '') + '/';
+    }
+    return p.url || '#';
   }
 
   function render(projects) {
@@ -14,7 +24,7 @@
       const li = document.createElement('li');
       const a = document.createElement('a');
       a.className = 'card';
-      a.href = p.url;
+      a.href = projectUrl(p, window.location);
       a.target = '_blank';
       a.rel = 'noopener noreferrer';
       const h = document.createElement('h2');
@@ -28,7 +38,7 @@
     status.textContent = projects.length ? '' : 'No projects to show.';
   }
 
-  if (typeof module !== 'undefined') module.exports = { visibleProjects };
+  if (typeof module !== 'undefined') module.exports = { visibleProjects, projectUrl };
   if (typeof document === 'undefined') return;
 
   fetch('projects.json')
