@@ -15,6 +15,8 @@
       const a = document.createElement('a');
       a.className = 'card';
       a.href = p.url;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
       const h = document.createElement('h2');
       h.textContent = p.name;
       const d = document.createElement('p');
