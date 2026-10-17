@@ -26,7 +26,7 @@
       "description": "A simple hello world page",
       "url": "HelloWorld/",
       "hide": false,
-      "subdomain": "helloworld"
+      "subdomain": "gday"
     },
     {
       "name": "pacer",
