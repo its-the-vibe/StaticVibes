@@ -1,0 +1,10 @@
+:root { --bg:#0f172a; --card:#1e293b; --fg:#f1f5f9; --muted:#cbd5e1; --accent:#38bdf8; }
+* { box-sizing: border-box; }
+body { margin:0; font-family:system-ui,sans-serif; background:var(--bg); color:var(--fg); }
+header, main { max-width:60rem; margin:0 auto; padding:1.5rem 1rem; }
+header p { color:var(--muted); }
+.grid { list-style:none; margin:0; padding:0; display:grid; gap:1rem; grid-template-columns:repeat(auto-fill,minmax(16rem,1fr)); }
+.card { display:block; height:100%; padding:1rem; background:var(--card); border-radius:.5rem; color:inherit; text-decoration:none; border:2px solid transparent; }
+.card:hover, .card:focus-visible { border-color:var(--accent); outline:none; }
+.card h2 { margin:0 0 .5rem; color:var(--accent); font-size:1.25rem; }
+.card p { margin:0; color:var(--muted); }
