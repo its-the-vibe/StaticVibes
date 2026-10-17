@@ -1,9 +1,40 @@
 {
   "projects": [
-    {"name": "GradientLab", "description": "A web tool to generate CSS gradients", "url": "GradientLab/", "hide": false},
-    {"name": "LocalLedger", "description": "A local ledger application", "url": "LocalLedger/", "hide": false},
-    {"name": "HelloWorld", "description": "A simple hello world page", "url": "HelloWorld/", "hide": false},
-    {"name": "pacer", "description": "A pacing tool", "url": "pacer/", "hide": false},
-    {"name": "spinny-globe", "description": "A spinning 3D globe", "url": "spinny-globe/", "hide": false}
+    {
+      "name": "CatSlop",
+      "description": "AI generated cat pics! 😺",
+      "url": "catslop/",
+      "hide": false
+    },
+    {
+      "name": "GradientLab",
+      "description": "A web tool to generate CSS gradients",
+      "url": "GradientLab/",
+      "hide": false
+    },
+    {
+      "name": "LocalLedger",
+      "description": "A local ledger application",
+      "url": "LocalLedger/",
+      "hide": false
+    },
+    {
+      "name": "HelloWorld",
+      "description": "A simple hello world page",
+      "url": "HelloWorld/",
+      "hide": false
+    },
+    {
+      "name": "pacer",
+      "description": "A pacing tool",
+      "url": "pacer/",
+      "hide": false
+    },
+    {
+      "name": "spinny-globe",
+      "description": "A spinning 3D globe",
+      "url": "spinny-globe/",
+      "hide": false
+    }
   ]
 }
