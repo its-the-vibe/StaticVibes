@@ -11,7 +11,7 @@ body:
       placeholder: e.g. CatSlop
     validations:
       required: true
-  - type: textarea
+  - type: input
     id: description
     attributes:
       label: Description
@@ -27,10 +27,13 @@ body:
       placeholder: e.g. catslop
     validations:
       required: true
-  - type: markdown
+  - type: textarea
+    id: implementation-details
     attributes:
-      value: |
-        ## Implementation checklist
+      label: Implementation details
+      description: Steps to implement the new site.
+      placeholder: |
+        ## Implementation details
 
         1. Create a folder at the repository root named after the project, containing its `index.html`.
         2. Update `apex/projects.json` by adding an entry to the `projects` array:
