@@ -41,6 +41,13 @@
       "url": "spinny-globe/",
       "hide": false,
       "subdomain": "spinny-globe"
+    },
+    {
+      "name": "CoinToss",
+      "description": "Shake your phone or click to toss a coin",
+      "url": "CoinToss/",
+      "hide": false,
+      "subdomain": "cointoss"
     }
   ]
 }
