@@ -48,6 +48,13 @@
       "url": "CoinToss/",
       "hide": false,
       "subdomain": "cointoss"
+    },
+    {
+      "name": "Magic8",
+      "description": "A magic eight ball to guide your life decisions",
+      "url": "Magic8/",
+      "hide": false,
+      "subdomain": "magic8"
     }
   ]
 }
