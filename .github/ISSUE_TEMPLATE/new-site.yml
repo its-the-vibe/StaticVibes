@@ -33,7 +33,7 @@ body:
       label: Implementation details
       description: Steps to implement the new site.
       value: |
-        ## Implementation details
+        [Describe the steps needed to implement the new site.]
 
         1. Create a folder at the repository root named after the project, containing its `index.html`.
         2. Update `apex/projects.json` by adding an entry to the `projects` array:
