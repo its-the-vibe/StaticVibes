@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#11152b">
+  <title>Magic8 — Ask the unknown</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #11152b;
+      color: #f8f3e8;
+      font-synthesis: none;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-width: 320px;
+      min-height: 100vh;
+      margin: 0;
+      display: grid;
+      place-items: center;
+      overflow-x: hidden;
+      background:
+        radial-gradient(ellipse at 50% 42%, rgba(75, 71, 126, .32), transparent 42%),
+        radial-gradient(ellipse at 50% 110%, rgba(232, 120, 103, .11), transparent 40%),
+        #11152b;
+    }
+
+    main {
+      width: min(100% - 2rem, 560px);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 0;
+      text-align: center;
+    }
+
+    .eyebrow {
+      margin: 0 0 .65rem;
+      color: #e6a99d;
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.5rem, 10vw, 4rem);
+      font-weight: 400;
+      letter-spacing: -.055em;
+    }
+
+    .intro {
+      margin: .75rem 0 2.25rem;
+      color: #aeb2c6;
+      font-size: .98rem;
+    }
+
+    .ball-wrap {
+      position: relative;
+      width: min(74vw, 330px);
+      aspect-ratio: 1;
+      margin-bottom: 2rem;
+      perspective: 800px;
+    }
+
+    .ball-wrap::before {
+      position: absolute;
+      inset: 8%;
+      border-radius: 50%;
+      background: rgba(107, 111, 185, .2);
+      content: "";
+      filter: blur(36px);
+      transition: opacity .3s ease, transform .3s ease;
+    }
+
+    .ball {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, .2);
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 34% 25%, #4b4c73 0, #292b4b 30%, #17192f 68%, #101225 100%);
+      box-shadow: inset -18px -24px 45px rgba(0, 0, 0, .42), inset 10px 12px 30px rgba(255, 255, 255, .08), 0 28px 70px rgba(0, 0, 0, .38);
+      color: inherit;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    .ball:focus-visible, .shake-button:focus-visible {
+      outline: 2px solid #f0ad9f;
+      outline-offset: 5px;
+    }
+
+    .ball::after {
+      position: absolute;
+      top: 11%;
+      left: 19%;
+      width: 34%;
+      height: 13%;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .11);
+      content: "";
+      filter: blur(12px);
+      transform: rotate(-35deg);
+    }
+
+    .window {
+      position: absolute;
+      top: 26%;
+      left: 26%;
+      width: 48%;
+      height: 48%;
+      display: grid;
+      place-items: center;
+      clip-path: polygon(50% 0, 100% 100%, 0 100%);
+      background: linear-gradient(155deg, #252d57, #10152f);
+      filter: drop-shadow(0 0 14px rgba(143, 162, 255, .28));
+    }
+
+    .answer {
+      width: 66%;
+      margin: 25% 0 0;
+      color: #e9e8ff;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(.76rem, 3.4vw, 1.12rem);
+      line-height: 1.15;
+      text-shadow: 0 1px 10px rgba(183, 196, 255, .45);
+    }
+
+    .prompt {
+      margin: 0;
+      color: #f1e9dc;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.25rem;
+    }
+
+    .hint {
+      margin: .65rem 0 1.2rem;
+      color: #9da2b9;
+      font-size: .84rem;
+    }
+
+    .shake-button {
+      min-height: 42px;
+      padding: .65rem 1.15rem;
+      border: 1px solid rgba(240, 173, 159, .45);
+      border-radius: 999px;
+      background: rgba(240, 173, 159, .08);
+      color: #f0b5a8;
+      cursor: pointer;
+      font: inherit;
+      font-size: .82rem;
+      transition: background .2s ease, border-color .2s ease;
+    }
+
+    .shake-button:hover { background: rgba(240, 173, 159, .16); border-color: #f0ad9f; }
+    .shake-button[hidden] { display: none; }
+
+    .shaking .ball { animation: shake .72s ease-in-out; }
+    .shaking::before { opacity: .85; transform: scale(1.2); }
+
+    @keyframes shake {
+      0%, 100% { transform: rotate(0) translateY(0); }
+      15% { transform: rotate(-8deg) translateY(-5px); }
+      30% { transform: rotate(8deg) translateY(1px); }
+      45% { transform: rotate(-7deg) translateY(-3px); }
+      60% { transform: rotate(6deg) translateY(0); }
+      75% { transform: rotate(-3deg) translateY(-2px); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="eyebrow">A little cosmic guidance</p>
+    <h1>Magic Eight Ball</h1>
+    <p class="intro">Ask a question. Trust the universe.</p>
+    <div class="ball-wrap" id="ball-wrap">
+      <button class="ball" id="ball" type="button" aria-label="Shake the Magic Eight Ball for an answer">
+        <span class="window"><span class="answer" id="answer" aria-live="polite">8</span></span>
+      </button>
+    </div>
+    <p class="prompt">What would you like to know?</p>
+    <p class="hint" id="hint">Tap the ball or shake your device</p>
+    <button class="shake-button" id="enable-motion" type="button" hidden>Enable shake to ask</button>
+  </main>
+  <script>
+    (function () {
+      var ball = document.getElementById('ball');
+      var ballWrap = document.getElementById('ball-wrap');
+      var answer = document.getElementById('answer');
+      var motionButton = document.getElementById('enable-motion');
+      var hint = document.getElementById('hint');
+      var answers = [
+        'It is certain', 'Without a doubt', 'You may rely on it', 'Yes, definitely',
+        'Signs point to yes', 'Most likely', 'Outlook good', 'Ask again later',
+        'Better not tell you now', 'Cannot predict now', 'Concentrate and ask again',
+        'Reply hazy, try again', 'Don’t count on it', 'My sources say no',
+        'Outlook not so good', 'Very doubtful', 'Yes', 'No', 'It is decidedly so',
+        'The stars say maybe'
+      ];
+      var isShaking = false;
+      var lastAnswer = -1;
+      var lastMotion = null;
+      var lastMotionTime = 0;
+      var lastShakeTime = 0;
+
+      function ask() {
+        if (isShaking) return;
+        isShaking = true;
+        var next = Math.floor(Math.random() * (answers.length - 1));
+        if (next >= lastAnswer) next++;
+        lastAnswer = next;
+        ballWrap.classList.remove('shaking');
+        void ballWrap.offsetWidth;
+        ballWrap.classList.add('shaking');
+        window.setTimeout(function () {
+          answer.textContent = answers[next];
+          ballWrap.classList.remove('shaking');
+          isShaking = false;
+        }, window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 30 : 760);
+      }
+
+      function onMotion(event) {
+        var motion = event.accelerationIncludingGravity;
+        if (!motion) return;
+        var now = Date.now();
+        if (now - lastMotionTime < 80) return;
+
+        if (lastMotion) {
+          var dx = (motion.x || 0) - lastMotion.x;
+          var dy = (motion.y || 0) - lastMotion.y;
+          var dz = (motion.z || 0) - lastMotion.z;
+          if (Math.sqrt(dx * dx + dy * dy + dz * dz) > 18 && now - lastShakeTime > 1500) {
+            lastShakeTime = now;
+            ask();
+          }
+        }
+
+        lastMotion = { x: motion.x || 0, y: motion.y || 0, z: motion.z || 0 };
+        lastMotionTime = now;
+      }
+
+      ball.addEventListener('click', ask);
+
+      if (window.DeviceMotionEvent) {
+        if (typeof window.DeviceMotionEvent.requestPermission === 'function') {
+          motionButton.hidden = false;
+          motionButton.addEventListener('click', function () {
+            window.DeviceMotionEvent.requestPermission().then(function (permission) {
+              if (permission === 'granted') {
+                window.addEventListener('devicemotion', onMotion);
+                motionButton.hidden = true;
+                hint.textContent = 'Tap the ball or shake your device';
+              } else {
+                hint.textContent = 'Motion access is off — tap the ball instead';
+              }
+            }).catch(function () {
+              hint.textContent = 'Motion access is unavailable — tap the ball instead';
+            });
+          });
+        } else {
+          window.addEventListener('devicemotion', onMotion);
+        }
+      }
+    })();
+  </script>
+</body>
+</html>
