@@ -32,7 +32,7 @@ body:
     attributes:
       label: Implementation details
       description: Steps to implement the new site.
-      placeholder: |
+      value: |
         ## Implementation details
 
         1. Create a folder at the repository root named after the project, containing its `index.html`.
