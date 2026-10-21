@@ -1,0 +1,46 @@
+name: New site
+description: Request a new static site to be added to StaticVibes
+title: "New site: "
+labels: ["new-site"]
+body:
+  - type: input
+    id: project-name
+    attributes:
+      label: Project name
+      description: Display name of the project. Also used as the project folder name.
+      placeholder: e.g. CatSlop
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Short description shown on the index site.
+      placeholder: e.g. AI generated cat pics!
+    validations:
+      required: true
+  - type: input
+    id: subdomain
+    attributes:
+      label: Subdomain
+      description: Lowercase letters, numbers and hyphens only, without the apex domain.
+      placeholder: e.g. catslop
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: |
+        ## Implementation checklist
+
+        1. Create a folder at the repository root named after the project, containing its `index.html`.
+        2. Update `apex/projects.json` by adding an entry to the `projects` array:
+           ```json
+           {
+             "name": "<Project name>",
+             "description": "<Description>",
+             "url": "<project-folder>/",
+             "hide": false,
+             "subdomain": "<Subdomain>"
+           }
+           ```
+        3. Open a pull request that references this issue.
