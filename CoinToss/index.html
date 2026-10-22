@@ -15,6 +15,7 @@
   .face { position:absolute; inset:0; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:4rem; font-weight:700;
     backface-visibility:hidden; -webkit-backface-visibility:hidden; color:#78350f;
     background:radial-gradient(circle at 30% 30%,#fde68a,#f59e0b 60%,#b45309); border:8px solid #fbbf24; box-shadow:0 10px 30px rgba(0,0,0,.5), inset 0 0 20px rgba(120,53,15,.5); }
+  .face svg { width:72%; height:72%; }
   .tails { transform:rotateY(180deg); }
   #result { font-size:1.5rem; min-height:2rem; }
   #hint { opacity:.6; font-size:.9rem; text-align:center; padding:0 1rem; }
@@ -25,7 +26,16 @@
 <body>
   <h1>CoinToss</h1>
   <div class="scene"><button class="coin" id="coin" aria-label="Toss the coin">
-    <div class="face heads">H</div><div class="face tails">T</div>
+    <div class="face heads"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+      <path fill="#78350f" d="M17 39 13 11l25 16a39 39 0 0 1 24 0l25-16-4 28a37 37 0 1 1-66 0Z"/>
+      <path fill="#fde68a" d="M32 48a5 7 0 1 0 0 14 5 7 0 0 0 0-14Zm36 0a5 7 0 1 0 0 14 5 7 0 0 0 0-14Z"/>
+      <path fill="#f59e0b" d="m46 67 4-3 4 3-4 4Z"/>
+      <path fill="none" stroke="#fde68a" stroke-linecap="round" stroke-width="2.5" d="M50 71c-3 5-9 5-12 1m12-1c3 5 9 5 12 1M25 67l-14-3m14 8-13 3m63-8 14-3m-14 8 13 3"/>
+    </svg></div><div class="face tails"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+      <path fill="#78350f" d="M73 61c14-4 18-17 10-25-7-7-18-3-18 5 0 5 6 7 9 3 2-2 1-5-1-6 6 0 8 7 4 12-5 6-14 5-21 1-5-3-10-4-17-3-9 1-17 9-19 20l-5 17h58l-4-15Z"/>
+      <path fill="#78350f" d="m28 37 1-23 19 13a29 29 0 0 1 16 0l9-12 5 24a30 30 0 0 1-50-2Z"/>
+      <path fill="#b45309" d="M30 83h13l2 7H27Zm27 0h13l3 7H56Z"/>
+    </svg></div>
   </button></div>
   <div id="result" aria-live="polite">&nbsp;</div>
   <button id="enable">Enable shake to toss</button>
