@@ -6,6 +6,9 @@ const SCALE = [
 ];
 
 const EVENTS = ["touchend", "click", "pointerup", "keydown"];
+const isIOS =
+  /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+  (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
 // Tiny silent WAV used to switch iOS to the media audio session
 const SILENT_WAV =
@@ -50,13 +53,15 @@ export class SoundEngine {
       src.connect(ctx.destination);
       src.start(0);
 
-      if (!this.silentEl) {
-        const el = new Audio(SILENT_WAV);
-        el.loop = true;
-        el.setAttribute("playsinline", "");
-        this.silentEl = el;
+      if (isIOS) {
+        if (!this.silentEl) {
+          const el = new Audio(SILENT_WAV);
+          el.loop = true;
+          el.setAttribute("playsinline", "");
+          this.silentEl = el;
+        }
+        void this.silentEl.play().catch(() => undefined);
       }
-      void this.silentEl.play().catch(() => undefined);
 
       if (ctx.state === "running") {
         EVENTS.forEach((e) => document.removeEventListener(e, unlock, true));
