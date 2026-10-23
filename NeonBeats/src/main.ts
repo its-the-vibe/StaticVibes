@@ -63,6 +63,8 @@ function updateClock(): void {
   byId("status-time").innerText = `${hours}:${minutes}`;
 }
 
+sound.unlockOnGesture();
+
 (async () => {
   const container = byId("pixi-viewport");
   const app = new Application();
