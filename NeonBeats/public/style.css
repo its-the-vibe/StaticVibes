@@ -39,3 +39,29 @@ body {
 ::-webkit-scrollbar {
     display: none;
 }
+
+/* On real mobile devices (touch or narrow screens) drop the fake phone chrome and go full screen */
+@media (pointer: coarse), (max-width: 767px) {
+    body {
+        padding: 0 !important;
+    }
+
+    #app-container {
+        width: 100% !important;
+        height: 100% !important;
+        max-height: none !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+    }
+
+    #status-bar,
+    #home-indicator {
+        display: none !important;
+    }
+
+    #ui-overlay {
+        padding-top: max(0.75rem, env(safe-area-inset-top)) !important;
+        padding-bottom: max(0.75rem, env(safe-area-inset-bottom)) !important;
+    }
+}
