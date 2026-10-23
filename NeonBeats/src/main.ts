@@ -76,6 +76,8 @@ sound.unlockOnGesture();
     antialias: true,
   });
   container.appendChild(app.canvas);
+  // iOS toolbars resize the container without always firing a window resize
+  new ResizeObserver(() => app.resize()).observe(container);
 
   app.stage.addChild(
     synthGroup,

@@ -42,8 +42,11 @@ body {
 
 /* On real mobile devices (touch or narrow screens) drop the fake phone chrome and go full screen */
 @media (pointer: coarse), (max-width: 767px) {
+    /* 100vh includes the area behind iOS Safari's toolbar; dvh tracks the visible area */
     body {
         padding: 0 !important;
+        height: 100vh !important;
+        height: 100dvh !important;
     }
 
     #app-container {
