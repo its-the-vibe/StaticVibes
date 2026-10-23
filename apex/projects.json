@@ -8,39 +8,11 @@
       "subdomain": "catslop"
     },
     {
-      "name": "GradientLab",
-      "description": "A web tool to generate CSS gradients",
-      "url": "GradientLab/",
+      "name": "NeonBeats",
+      "description": "An interactive PixiJS mobile music environment built with Web Audio & Particle Physics.",
+      "url": "NeonBeats/",
       "hide": false,
-      "subdomain": "gradientlab"
-    },
-    {
-      "name": "LocalLedger",
-      "description": "A local ledger application",
-      "url": "LocalLedger/",
-      "hide": false,
-      "subdomain": "localledger"
-    },
-    {
-      "name": "HelloWorld",
-      "description": "A simple hello world page",
-      "url": "HelloWorld/",
-      "hide": false,
-      "subdomain": "gday"
-    },
-    {
-      "name": "pacer",
-      "description": "A pacing tool",
-      "url": "pacer/",
-      "hide": false,
-      "subdomain": "pacer"
-    },
-    {
-      "name": "spinny-globe",
-      "description": "A spinning 3D globe",
-      "url": "spinny-globe/",
-      "hide": false,
-      "subdomain": "spinny-globe"
+      "subdomain": "neonbeats"
     },
     {
       "name": "CoinToss",
@@ -50,11 +22,46 @@
       "subdomain": "cointoss"
     },
     {
+      "name": "GradientLab",
+      "description": "A web tool to generate CSS gradients",
+      "url": "GradientLab/",
+      "hide": false,
+      "subdomain": "gradientlab"
+    },
+    {
+      "name": "pacer",
+      "description": "A pacing tool",
+      "url": "pacer/",
+      "hide": false,
+      "subdomain": "pacer"
+    },
+    {
+      "name": "LocalLedger",
+      "description": "A local ledger application",
+      "url": "LocalLedger/",
+      "hide": false,
+      "subdomain": "localledger"
+    },
+    {
+      "name": "spinny-globe",
+      "description": "A spinning 3D globe",
+      "url": "spinny-globe/",
+      "hide": false,
+      "subdomain": "spinny-globe"
+    },
+    {
       "name": "Magic8",
       "description": "A magic eight ball to guide your life decisions",
       "url": "Magic8/",
       "hide": false,
       "subdomain": "magic8"
+    },
+    {
+      "name": "HelloWorld",
+      "description": "A simple hello world page",
+      "url": "HelloWorld/",
+      "hide": false,
+      "subdomain": "gday"
     }
   ]
 }

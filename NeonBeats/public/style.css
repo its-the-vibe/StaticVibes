@@ -1,0 +1,70 @@
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: #090a0f;
+    color: #ffffff;
+    overflow: hidden;
+    touch-action: manipulation;
+}
+
+.font-orbitron {
+    font-family: 'Orbitron', sans-serif;
+}
+
+/* Glassmorphic Effects */
+.glass-panel {
+    background: rgba(18, 22, 36, 0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-btn {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-btn:active {
+    transform: scale(0.95);
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Mobile Device Frame styling */
+.phone-casing {
+    box-shadow: 0 0 50px rgba(0, 240, 255, 0.15), 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+}
+
+/* Hide scrollbars */
+::-webkit-scrollbar {
+    display: none;
+}
+
+/* On real mobile devices (touch or narrow screens) drop the fake phone chrome and go full screen */
+@media (pointer: coarse), (max-width: 767px) {
+    /* 100vh includes the area behind iOS Safari's toolbar; dvh tracks the visible area */
+    body {
+        padding: 0 !important;
+        height: 100vh !important;
+        height: 100dvh !important;
+    }
+
+    #app-container {
+        width: 100% !important;
+        height: 100% !important;
+        max-height: none !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+    }
+
+    #status-bar,
+    #home-indicator {
+        display: none !important;
+    }
+
+    #ui-overlay {
+        padding-top: max(0.75rem, env(safe-area-inset-top)) !important;
+        padding-bottom: max(0.75rem, env(safe-area-inset-bottom)) !important;
+    }
+}
