@@ -60,7 +60,7 @@
   var SEGMENT = 400, SHAKE_IDLE = 700;
   var shaking = false, lastShake = 0, shakeTimer = null;
 
-  function land() {
+  function land(fromApex) {
     var heads = Math.random() < 0.5;
     var spins = 5 + Math.floor(Math.random() * 4);
     var current = rotation % 360;
@@ -68,7 +68,10 @@
     rotation += spins * 360 + ((target - current + 360) % 360);
     var dur = rm ? 0 : DURATION;
     coin.style.transition = 'transform ' + dur + 'ms cubic-bezier(.2,.7,.3,1)';
-    coin.animate && !rm && coin.parentNode.animate(
+    if (fromApex) {
+      coin.parentNode.style.transition = 'transform ' + Math.round(dur * .55) + 'ms ease-in';
+      coin.parentNode.style.transform = '';
+    } else coin.animate && !rm && coin.parentNode.animate(
       [{ transform: 'translateY(0) scale(1)' }, { transform: 'translateY(-160px) scale(1.4)', offset: .45 }, { transform: 'translateY(0) scale(1)' }],
       { duration: DURATION, easing: 'ease-in-out' });
     coin.style.transform = 'rotateX(' + rotation + 'deg)';
@@ -88,7 +91,7 @@
   function shakeStep() {
     if (Date.now() - lastShake > SHAKE_IDLE) {
       shaking = false;
-      land();
+      land(!rm);
       return;
     }
     rotation += 720;
@@ -104,6 +107,8 @@
     shaking = true;
     result.innerHTML = '&nbsp;';
     if (rm) { shakeTimer = setTimeout(shakeStep, SHAKE_IDLE); return; }
+    coin.parentNode.style.transition = 'transform ' + Math.round(DURATION * .45) + 'ms ease-out';
+    coin.parentNode.style.transform = 'translateY(-160px) scale(1.4)';
     shakeStep();
   }
 
