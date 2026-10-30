@@ -16,7 +16,7 @@
     backface-visibility:hidden; -webkit-backface-visibility:hidden; color:#78350f;
     background:radial-gradient(circle at 30% 30%,#fde68a,#f59e0b 60%,#b45309); border:8px solid #fbbf24; box-shadow:0 10px 30px rgba(0,0,0,.5), inset 0 0 20px rgba(120,53,15,.5); }
   .face svg { overflow:visible; width:62%; height:62%; filter:drop-shadow(1px 2px 0 rgba(254,243,199,.6)); }
-  .tails { transform:rotateY(180deg); }
+  .tails { transform:rotateX(180deg); }
   #result { font-size:1.5rem; min-height:2rem; }
   #hint { opacity:.6; font-size:.9rem; text-align:center; padding:0 1rem; }
   #enable { display:none; padding:.6rem 1.2rem; border-radius:999px; border:0; font-size:1rem; background:#fbbf24; color:#78350f; cursor:pointer; }
@@ -71,7 +71,7 @@
     coin.animate && !rm && coin.parentNode.animate(
       [{ transform: 'translateY(0) scale(1)' }, { transform: 'translateY(-160px) scale(1.4)', offset: .45 }, { transform: 'translateY(0) scale(1)' }],
       { duration: DURATION, easing: 'ease-in-out' });
-    coin.style.transform = 'rotateY(' + rotation + 'deg)';
+    coin.style.transform = 'rotateX(' + rotation + 'deg)';
     setTimeout(function () {
       result.textContent = heads ? 'Heads!' : 'Tails!';
       tossing = false;
