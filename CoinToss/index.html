@@ -56,16 +56,16 @@
   var rotation = 0, tossing = false;
   var DURATION = 1600;
 
-  function toss() {
-    if (tossing) return;
-    tossing = true;
-    result.innerHTML = '&nbsp;';
+  var rm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var SEGMENT = 400, SHAKE_IDLE = 700;
+  var shaking = false, lastShake = 0, shakeTimer = null;
+
+  function land() {
     var heads = Math.random() < 0.5;
     var spins = 5 + Math.floor(Math.random() * 4);
     var current = rotation % 360;
     var target = heads ? 0 : 180;
     rotation += spins * 360 + ((target - current + 360) % 360);
-    var rm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var dur = rm ? 0 : DURATION;
     coin.style.transition = 'transform ' + dur + 'ms cubic-bezier(.2,.7,.3,1)';
     coin.animate && !rm && coin.parentNode.animate(
@@ -78,9 +78,38 @@
     }, dur);
   }
 
+  function toss() {
+    if (tossing) return;
+    tossing = true;
+    result.innerHTML = '&nbsp;';
+    land();
+  }
+
+  function shakeStep() {
+    if (Date.now() - lastShake > SHAKE_IDLE) {
+      shaking = false;
+      land();
+      return;
+    }
+    rotation += 720;
+    coin.style.transition = 'transform ' + SEGMENT + 'ms linear';
+    coin.style.transform = 'rotateX(' + rotation + 'deg)';
+    shakeTimer = setTimeout(shakeStep, SEGMENT);
+  }
+
+  function shake() {
+    lastShake = Date.now();
+    if (tossing) return;
+    tossing = true;
+    shaking = true;
+    result.innerHTML = '&nbsp;';
+    if (rm) { shakeTimer = setTimeout(shakeStep, SHAKE_IDLE); return; }
+    shakeStep();
+  }
+
   coin.addEventListener('click', toss);
 
-  var last = 0, lastTime = 0, lastShake = 0;
+  var last = 0, lastTime = 0;
   function onMotion(e) {
     var a = e.accelerationIncludingGravity;
     if (!a) return;
@@ -89,7 +118,7 @@
     var sum = (a.x || 0) + (a.y || 0) + (a.z || 0);
     var delta = Math.abs(sum - last);
     last = sum; lastTime = now;
-    if (delta > 25 && now - lastShake > 1000) { lastShake = now; toss(); }
+    if (delta > 25) shake();
   }
 
   var btn = document.getElementById('enable');
