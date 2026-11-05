@@ -22,6 +22,12 @@
       "subdomain": "cointoss"
     },
     {
+      "name": "Thought for the Day",
+      "description": "AI Generated Thought for the day",
+      "hide": false,
+      "subdomain": "thought"
+    },
+    {
       "name": "GradientLab",
       "description": "A web tool to generate CSS gradients",
       "url": "GradientLab/",
@@ -37,7 +43,7 @@
     },
     {
       "name": "LocalLedger",
-      "description": "A local ledger application",
+      "description": "A privacy-first, client-side web app for importing CSV transactions and visualizing personal spending breakdowns.",
       "url": "LocalLedger/",
       "hide": false,
       "subdomain": "localledger"
